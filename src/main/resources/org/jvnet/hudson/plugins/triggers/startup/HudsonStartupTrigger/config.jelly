@@ -1,11 +1,13 @@
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
-
-    <f:entry field="label" title="${%Restricted node Label}">
-        <f:textbox name="label" value="${instance.label}"/>
-    </f:entry>
-
-    <f:entry field="quietPeriod" title="${%Quiet period}">
-        <f:textbox name="quietPeriod" value="${instance.quietPeriod}"/>
-    </f:entry>
-
+    <f:advanced>
+        <f:entry field="label" title="${%Restricted node Label}">
+            <f:textbox name="label" value="${instance.label}"/>
+        </f:entry>
+        <f:entry field="quietPeriod" title="${%Quiet period}">
+            <f:textbox name="quietPeriod" value="${instance.quietPeriod}"/>
+        </f:entry>
+        <f:entry field="runOnNewSlave" title="${%Run on new slave}">
+            <f:checkbox name="runOnNewSlave" value="${instance.runOnNewSlave}"/>
+        </f:entry>
+    </f:advanced>
 </j:jelly>

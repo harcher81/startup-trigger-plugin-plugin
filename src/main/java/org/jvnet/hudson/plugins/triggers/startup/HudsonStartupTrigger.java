@@ -21,11 +21,15 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class HudsonStartupTrigger extends Trigger<BuildableItem> {
 
     private String label;
-
     private int quietPeriod;
+    private boolean runOnNewSlave;
+
+    public HudsonStartupTrigger(String label, String quietPeriod) throws ANTLRException {
+        this(label, quietPeriod, false);
+    }
 
     @DataBoundConstructor
-    public HudsonStartupTrigger(String label, String quietPeriod) throws ANTLRException {
+    public HudsonStartupTrigger(String label, String quietPeriod, boolean runOnNewSlave) throws ANTLRException {
         super();
         this.label = Util.fixEmpty(label);
         String givenQuietPeriod = Util.fixEmpty(quietPeriod);
@@ -34,6 +38,8 @@ public class HudsonStartupTrigger extends Trigger<BuildableItem> {
         } else {
             this.quietPeriod = Integer.parseInt(quietPeriod);
         }
+
+        this.runOnNewSlave = runOnNewSlave;
     }
 
     public String getLabel() {
@@ -44,9 +50,8 @@ public class HudsonStartupTrigger extends Trigger<BuildableItem> {
         return quietPeriod;
     }
 
-    @Override
-    public void start(BuildableItem project, boolean newInstance) {
-        //DO NOTHING HERE. RELIES ON EXTERNAL LISTENER
+    public boolean getRunOnNewSlave() {
+        return runOnNewSlave;
     }
 
     @Extension

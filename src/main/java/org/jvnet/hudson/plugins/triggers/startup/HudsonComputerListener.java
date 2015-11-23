@@ -7,6 +7,7 @@ import hudson.slaves.ComputerListener;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import jenkins.model.Jenkins;
 
 /**
  * @author Gregory Boissinot
@@ -19,7 +20,7 @@ public class HudsonComputerListener extends ComputerListener implements Serializ
         Node node = c.getNode();
         if (node != null) {
             listener.getLogger().println("[StartupTrigger] - Scanning jobs for node " + getNodeName(node));
-            List<TopLevelItem> items = Hudson.getInstance().getItems();
+            List<TopLevelItem> items = Jenkins.getInstance().getItems();
             for (TopLevelItem item : items) {
                 processAndScheduleIfNeeded(item, c, listener);
             }
@@ -53,8 +54,15 @@ public class HudsonComputerListener extends ComputerListener implements Serializ
 
         HudsonStartupService startupService = new HudsonStartupService();
         if (startupService.has2Schedule(startupTrigger, node)) {
-            listener.getLogger().print("[StartupTrigger] - Scheduling " + project.getName());
-            project.scheduleBuild(startupTrigger.getQuietPeriod(), new HudsonStartupCause());
+            try {
+                listener.getLogger().print("[StartupTrigger] - Scheduling " + project.getName());
+                if (startupTrigger.getRunOnNewSlave()) {
+                    project.setAssignedNode(node);
+                }
+                project.scheduleBuild(startupTrigger.getQuietPeriod(), new HudsonStartupCause());
+            } catch (IOException e) {
+                
+            }
         }
     }
 
